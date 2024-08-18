@@ -24,32 +24,32 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, ...values] = line.split('|');
-                const name = values[0]?.trim();
-                const region_key = values[1]?.trim();
-                let description = values.slice(2).join('|')?.trim(); // Reunir os valores separados por | e limpar espaços
+                const [N_NATIONKEY, ...values] = line.split('|');
+                const N_NAME = values[0]?.trim();
+                const N_REGIONKEY = values[1]?.trim();
+                let N_COMMENT = values.slice(2).join('|')?.trim(); // Reunir os valores separados por | e limpar espaços
                 
                 // Remove o caractere | no final da descrição, se houver
-                description = description.replace(/\|$/, '');
+                N_COMMENT = N_COMMENT.replace(/\|$/, '');
 
-                if (key && name && region_key && description) { // Verificar se todos os campos estão presentes
+                if (N_NATIONKEY && N_NAME && N_REGIONKEY && N_COMMENT) { // Verificar se todos os campos estão presentes
                     // Criando o JSON
                     const jsonValue = JSON.stringify({
-                        name: name,
-                        region_key: region_key,
-                        description: description
+                        N_NAME: N_NAME,
+                        N_REGIONKEY: N_REGIONKEY,
+                        N_COMMENT: N_COMMENT
                     });
 
                     try {
                         // Inserindo no banco de dados
                         const result = await connection.execute(
-                            `INSERT INTO NATION (key, value) VALUES (:key, :value)`,
-                            { key: key.trim(), value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO NATION (N_NATIONKEY, N_NATIONVALUES) VALUES (:key, :value)`,
+                            { key: N_NATIONKEY.trim(), value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key.trim()} -> ${jsonValue}`);
+                        console.log(`Inserido: ${N_NATIONKEY.trim()} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key.trim()}: ${error}`);
+                        console.error(`Erro ao inserir ${N_NATIONKEY.trim()}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);

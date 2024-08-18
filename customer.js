@@ -27,29 +27,31 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, customerId, phone, balance, category, description] = line.split('|').map(item => item.trim());
+                const [C_CUSTKEY, C_NAME, C_ADDRESS, C_NATIONKEY,C_PHONE, C_ACCTBAL, C_MKTSEGMENT, C_COMMENT] = line.split('|').map(item => item.trim());
 
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    name: name,
-                    phone: phone,
-                    balance: balance,
-                    category: category,
-                    description: description
+                    C_NAME: C_NAME,
+                    C_ADDRESS: C_ADDRESS,
+                    C_NATIONKEY: C_NATIONKEY,
+                    C_PHONE: C_PHONE,
+                    C_ACCTBAL: C_ACCTBAL,
+                    C_MKTSEGMENT: C_MKTSEGMENT,
+                    C_COMMENT: C_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (C_CUSTKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO CUSTOMER (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO CUSTOMER (C_CUSTKEY, C_CUSTVALUES) VALUES (:key, :value)`,
+                            { key: C_CUSTKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${C_CUSTKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${C_CUSTKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
