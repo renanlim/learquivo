@@ -24,29 +24,31 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, manufacturer_key, brand_key, type, size, cost, description] = line.split('|').map(item => item.trim());
+                const [P_PARTKEY, P_NAME, P_MFGR, P_BRAND, P_TYPE, P_SIZE, P_CONTAINER, P_RETAILPRICE, P_COMMENT] = line.split('|').map(item => item.trim());
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    manufacturer_key: manufacturer_key,
-                    brand_key: brand_key,
-                    type: type,
-                    size: size,
-                    cost: cost,
-                    description: description
+                    P_NAME: P_NAME,
+                    P_MFGR: P_MFGR,
+                    P_BRAND: P_BRAND,
+                    P_TYPE: P_TYPE,
+                    P_SIZE: P_SIZE,
+                    P_CONTAINER: P_CONTAINER,
+                    P_RETAILPRICE: P_RETAILPRICE,
+                    P_COMMENT: P_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (P_PARTKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         const result = await connection.execute(
-                            `INSERT INTO PART (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO PART (P_PARTKEY, P_PARTVALUES) VALUES (:key, :value)`,
+                            { key: P_PARTKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${P_PARTKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${P_PARTKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
