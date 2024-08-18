@@ -8,7 +8,7 @@ async function insertData() {
         // Conectando ao banco de dados Oracle
         connection = await oracledb.getConnection({
             user: 'C##TESTE',
-            password: 'rei9122947', // Substitua pela sua senha
+            password: 'rei9122947',
             connectString: 'majovdev-pc2:1521/xe'
         });
 
@@ -27,25 +27,25 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, name, description] = line.split('|').map(item => item.trim());
+                const [R_REGIONKEY, R_NAME, R_COMMENT] = line.split('|').map(item => item.trim());
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    name: name,
-                    description: description
+                    R_NAME: R_NAME,
+                    R_COMMENT: R_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (R_REGIONKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
-                        await connection.execute(
-                            `INSERT INTO REGION (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                        const result = await connection.execute(
+                            `INSERT INTO REGION (R_REGIONKEY, R_REGIONVALUE) VALUES (:key, :value)`,
+                            { key: R_REGIONKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${R_REGIONKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${R_REGIONKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
