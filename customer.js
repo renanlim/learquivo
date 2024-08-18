@@ -15,7 +15,7 @@ async function insertData() {
         console.log('Conectado ao Oracle Database');
 
         // Lendo o arquivo
-        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\customer.tbl', 'utf8');
+        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\files\\customer.tbl', 'utf8');
         const lines = data.split('\n');
 
         // Ordenar as linhas por algum critério se necessário (aqui estamos apenas processando na ordem original)
@@ -45,7 +45,7 @@ async function insertData() {
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO CUSTOMER (C_CUSTKEY, C_CUSTVALUES) VALUES (:key, :value)`,
+                            `INSERT INTO CUSTOMER (C_CUSTOMERKEY, C_CUSTOMERVALUE) VALUES (:key, :value)`,
                             { key: C_CUSTKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 

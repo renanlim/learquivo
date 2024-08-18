@@ -15,7 +15,7 @@ async function insertData() {
         console.log('Conectado ao Oracle Database');
 
         // Lendo o arquivo
-        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\nation.tbl', 'utf8');
+        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\files\\nation.tbl', 'utf8');
         const lines = data.split('\n');
 
         // Iterando sobre cada linha do arquivo
@@ -43,7 +43,7 @@ async function insertData() {
                     try {
                         // Inserindo no banco de dados
                         const result = await connection.execute(
-                            `INSERT INTO NATION (N_NATIONKEY, N_NATIONVALUES) VALUES (:key, :value)`,
+                            `INSERT INTO NATION (N_NATIONKEY, N_NATIONVALUE) VALUES (:key, :value)`,
                             { key: N_NATIONKEY.trim(), value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 

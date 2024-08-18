@@ -16,7 +16,7 @@ async function insertData() {
 
     // Lendo o arquivo
     const data = fs.readFileSync(
-      "D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\lineitem.tbl",
+      "D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\files\\lineitem.tbl",
       "utf8"
     );
     const lines = data.split("\n");
@@ -54,6 +54,7 @@ async function insertData() {
 
         // Criando o JSON
         const jsonValue = JSON.stringify({
+            L_PARTKEY: L_PARTKEY,
             L_SUPPKEY: L_SUPPKEY,
             L_QUANTITY: L_QUANTITY,
             L_EXTENDEDPRICE: L_EXTENDEDPRICE,
@@ -74,7 +75,7 @@ async function insertData() {
           try {
             // Inserindo no banco de dados
             await connection.execute(
-              `INSERT INTO LINEITEM (L_LINEKEY, L_LINEVALUES) VALUES (:key, :value)`,
+              `INSERT INTO LINEITEM (L_LINEKEY, L_LINEVALUE) VALUES (:key, :value)`,
               { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
             );
 
