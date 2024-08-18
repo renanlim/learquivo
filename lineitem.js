@@ -32,39 +32,41 @@ async function insertData() {
       if (line) {
         // Verificar se a linha não está vazia
         const [
-          order_key,
-          part_key,
-          supp_id,
-          line_number,
-          quantity,
-          extended_price,
-          discount,
-          tax,
-          return_flag,
-          status,
-          ship_date,
-          commit_date,
-          receipt_date,
-          ship_instructions,
-          ship_mode,
+          L_ORDERKEY,
+          L_PARTKEY,
+          L_SUPPKEY,
+          L_LINENUMBER,
+          L_QUANTITY,
+          L_EXTENDEDPRICE,
+          L_DISCOUNT,
+          L_TAX,
+          L_RETURNFLAG,
+          L_LINESTATUS,
+          L_SHIPDATE,
+          L_COMMITDATE,
+          L_RECEIPTDATE,
+          L_SHIPINSTRUCT,
+          L_SHIPMODE,
+          L_COMMENT,
         ] = line.split("|").map((item) => item.trim());
 
-        const key = `${order_key}_${part_key}_${line_number}`;
+        const key = `${L_ORDERKEY}_${L_LINENUMBER}`;
 
         // Criando o JSON
         const jsonValue = JSON.stringify({
-            supp_id: supp_id,
-            quantity: quantity,
-            extended_price: extended_price,
-            discount: discount,
-            tax: tax,
-            return_flag: return_flag,
-            status: status,
-            ship_date: ship_date,
-            commit_date: commit_date,
-            receipt_date: receipt_date,
-            ship_instructions: ship_instructions,
-            ship_mode: ship_mode
+            L_SUPPKEY: L_SUPPKEY,
+            L_QUANTITY: L_QUANTITY,
+            L_EXTENDEDPRICE: L_EXTENDEDPRICE,
+            L_DISCOUNT: L_DISCOUNT,
+            L_TAX: L_TAX,
+            L_RETURNFLAG: L_RETURNFLAG,
+            L_LINESTATUS: L_LINESTATUS,
+            L_SHIPDATE: L_SHIPDATE,
+            L_COMMITDATE: L_COMMITDATE,
+            L_RECEIPTDATE: L_RECEIPTDATE,
+            L_SHIPINSTRUCT: L_SHIPINSTRUCT,
+            L_SHIPMODE: L_SHIPMODE,
+            L_COMMENT: L_COMMENT
         });
 
         if (key && jsonValue) {
@@ -72,7 +74,7 @@ async function insertData() {
           try {
             // Inserindo no banco de dados
             await connection.execute(
-              `INSERT INTO LINEITEM (key, value) VALUES (:key, :value)`,
+              `INSERT INTO LINEITEM (L_LINEKEY, L_LINEVALUES) VALUES (:key, :value)`,
               { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
             );
 
