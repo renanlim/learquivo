@@ -27,29 +27,28 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, name, address, phone, city, state, credit] = line.split('|').map(item => item.trim());
+                const [S_SUPPKEY, S_NAME, S_ADDRESS, S_PHONE, S_ACCTBAL, S_COMMENT] = line.split('|').map(item => item.trim());
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    name: name,
-                    address: address,
-                    phone: phone,
-                    city: city,
-                    state: state,
-                    credit: credit
+                    S_NAME: S_NAME,
+                    S_ADDRESS: S_ADDRESS,
+                    S_PHONE: S_PHONE,
+                    S_ACCTBAL: S_ACCTBAL,
+                    S_COMMENT: S_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (S_SUPPKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
                             `INSERT INTO SUPPLIER (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            { S_SUPPKEY: S_SUPPKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${S_SUPPKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${S_SUPPKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
