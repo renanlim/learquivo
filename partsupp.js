@@ -27,28 +27,28 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [part_key, supplier_key, quantity, cost, comment] = line.split('|').map(item => item.trim());
+                const [PS_PARTKEY, PS_SUPPKEY, PS_AVAILQTY, PS_SUPPLYCOST, PS_COMMENT] = line.split('|').map(item => item.trim());
 
-                const key = `${part_key}_${supplier_key}`;
+                const key = `${PS_PARTKEY}_${PS_SUPPKEY}`;
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    quantity: quantity,
-                    cost: cost,
-                    comment: comment,
+                    PS_AVAILQTY: PS_AVAILQTY,
+                    PS_SUPPLYCOST: PS_SUPPLYCOST,
+                    PS_COMMENT: PS_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (PS_PARTKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO PARTSUPP (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO PARTSUPP (PS_PARTKEY, PS_PARTVALUE) VALUES (:key, :value)`,
+                            { key: PS_PARTKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${PS_PARTKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${PS_PARTKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
