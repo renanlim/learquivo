@@ -52,7 +52,7 @@ async function insertData() {
                 }
             }
         }
-
+        //teste
         // Confirma as inserções
         await connection.commit();
         console.log('Todas as inserções foram confirmadas.');
