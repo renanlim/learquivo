@@ -27,31 +27,31 @@ async function insertData() {
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
 
             if (line) { // Verificar se a linha não está vazia
-                const [key, order_id, customer_id, order_status, order_date, priority, clerk, ship_mode, comments] = line.split('|').map(item => item.trim());
+                const [O_ORDERKEY, O_CUSTKEY, O_ORDERSTATUS, O_TOTALPRICE, O_ORDERDATE, O_ORDERPRIORITY, O_CLERK, O_SHIPPRIORITY, O_COMMENT] = line.split('|').map(item => item.trim());
 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    order_id: order_id,
-                    customer_id: customer_id,
-                    order_status: order_status,
-                    order_date: order_date,
-                    priority: priority,
-                    clerk: clerk,
-                    ship_mode: ship_mode,
-                    comments: comments
+                    O_CUSTKEY: O_CUSTKEY,
+                    O_ORDERSTATUS: O_ORDERSTATUS,
+                    O_TOTALPRICE: O_TOTALPRICE,
+                    O_ORDERDATE: O_ORDERDATE,
+                    O_ORDERPRIORITY: O_ORDERPRIORITY,
+                    O_CLERK: O_CLERK,
+                    O_SHIPPRIORITY: O_SHIPPRIORITY,
+                    O_COMMENT: O_COMMENT
                 });
 
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+                if (O_ORDERKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO ORDERS (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO ORDERS (O_ORDERKEY, O_ORDERVALUE) VALUES (:key, :value)`,
+                            { key: O_ORDERKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+                        console.log(`Inserido: ${O_ORDERKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${O_ORDERKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
