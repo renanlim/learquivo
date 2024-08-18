@@ -42,8 +42,8 @@ async function insertData() {
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO SUPPLIER (key, value) VALUES (:key, :value)`,
-                            { S_SUPPKEY: S_SUPPKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO SUPPLIER (S_SUPPKEY, S_SUPPVALUE) VALUES (:key, :value)`,
+                            { key: S_SUPPKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
                         console.log(`Inserido: ${S_SUPPKEY} -> ${jsonValue}`);
