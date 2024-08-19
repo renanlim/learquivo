@@ -1,68 +1,72 @@
 const fs = require('fs');
 const oracledb = require('oracledb');
+require('dotenv').config();
+const BD_USER = process.env.BD_USER;
+const BD_PASSWORD = process.env.BD_PASSWORD;
+const BD_CONNECT = process.env.BD_CONNECT;
 
 async function insertData() {
     let connection;
-
+ 
     try {
         // Conectando ao banco de dados Oracle
         connection = await oracledb.getConnection({
-            user: 'C##TESTE',
-            password: 'rei9122947', // Substitua pela sua senha
-            connectString: 'majovdev-pc2:1521/xe'
+            user: BD_USER,
+            password: BD_PASSWORD,
+            connectString: BD_CONNECT
         });
-
+ 
         console.log('Conectado ao Oracle Database');
-
+ 
         // Lendo o arquivo
-        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\orders.tbl', 'utf8');
+        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\files\\orders.tbl', 'utf8');
         const lines = data.split('\n');
-
+ 
         // Ordenar as linhas por algum critério se necessário (aqui estamos apenas processando na ordem original)
         const sortedLines = lines.sort();
-
+ 
         // Iterando sobre cada linha do arquivo
         for (let line of sortedLines) {
             // Limpar espaços em branco e caracteres de nova linha
             line = line.trim().replace(/\r/g, ''); // Remove caracteres \r
-
+ 
             if (line) { // Verificar se a linha não está vazia
-                const [key, order_id, customer_id, order_status, order_date, priority, clerk, ship_mode, comments] = line.split('|').map(item => item.trim());
-
+                const [O_ORDERKEY, O_CUSTKEY, O_ORDERSTATUS, O_TOTALPRICE, O_ORDERDATE, O_ORDERPRIORITY, O_CLERK, O_SHIPPRIORITY, O_COMMENT] = line.split('|').map(item => item.trim());
+ 
                 // Criando o JSON
                 const jsonValue = JSON.stringify({
-                    order_id: order_id,
-                    customer_id: customer_id,
-                    order_status: order_status,
-                    order_date: order_date,
-                    priority: priority,
-                    clerk: clerk,
-                    ship_mode: ship_mode,
-                    comments: comments
+                    O_CUSTKEY: O_CUSTKEY,
+                    O_ORDERSTATUS: O_ORDERSTATUS,
+                    O_TOTALPRICE: O_TOTALPRICE,
+                    O_ORDERDATE: O_ORDERDATE,
+                    O_ORDERPRIORITY: O_ORDERPRIORITY,
+                    O_CLERK: O_CLERK,
+                    O_SHIPPRIORITY: O_SHIPPRIORITY,
+                    O_COMMENT: O_COMMENT
                 });
-
-                if (key && jsonValue) { // Verificar se todos os campos estão presentes
+ 
+                if (O_ORDERKEY && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
-                            `INSERT INTO ORDERS (key, value) VALUES (:key, :value)`,
-                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            `INSERT INTO ORDERS (O_ORDERKEY, O_ORDERVALUE) VALUES (:key, :value)`,
+                            { key: O_ORDERKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
-
-                        console.log(`Inserido: ${key} -> ${jsonValue}`);
+ 
+                        console.log(`Inserido: ${O_ORDERKEY} -> ${jsonValue}`);
                     } catch (error) {
-                        console.error(`Erro ao inserir ${key}: ${error}`);
+                        console.error(`Erro ao inserir ${O_ORDERKEY}: ${error}`);
                     }
                 } else {
                     console.error(`Linha inválida ou dados ausentes: ${line}`);
                 }
             }
         }
-
+ 
         // Confirma as inserções
         await connection.commit();
         console.log('Todas as inserções foram confirmadas.');
-
+ 
     } catch (err) {
         console.error('Erro ao conectar ao banco de dados', err);
     } finally {
@@ -76,6 +80,6 @@ async function insertData() {
         }
     }
 }
-
+ 
 // Executando a função
 insertData();

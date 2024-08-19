@@ -1,5 +1,9 @@
 const fs = require('fs');
 const oracledb = require('oracledb');
+require('dotenv').config();
+const BD_USER = process.env.BD_USER;
+const BD_PASSWORD = process.env.BD_PASSWORD;
+const BD_CONNECT = process.env.BD_CONNECT;
 
 async function insertData() {
     let connection;
@@ -7,15 +11,15 @@ async function insertData() {
     try {
         // Conectando ao banco de dados Oracle
         connection = await oracledb.getConnection({
-            user: 'C##TESTE',
-            password: 'rei9122947', // Substitua pela sua senha
-            connectString: 'majovdev-pc2:1521/xe'
+            user: BD_USER,
+            password: BD_PASSWORD,
+            connectString: BD_CONNECT
         });
 
         console.log('Conectado ao Oracle Database');
 
         // Lendo o arquivo
-        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\partsupp.tbl', 'utf8');
+        const data = fs.readFileSync('D:\\Users\\Renan Lima\\Documents\\Projetos Pessoais\\learquivo\\files\\partsupp.tbl', 'utf8');
         const lines = data.split('\n');
 
         // Ordenar as linhas por algum critério se necessário (aqui estamos apenas processando na ordem original)
@@ -38,12 +42,12 @@ async function insertData() {
                     PS_COMMENT: PS_COMMENT
                 });
 
-                if (PS_PARTKEY && jsonValue) { // Verificar se todos os campos estão presentes
+                if (key && jsonValue) { // Verificar se todos os campos estão presentes
                     try {
                         // Inserindo no banco de dados
                         await connection.execute(
                             `INSERT INTO PARTSUPP (PS_PARTKEY, PS_PARTVALUE) VALUES (:key, :value)`,
-                            { key: PS_PARTKEY, value: jsonValue } // Certifique-se de que o key não seja NULL
+                            { key: key, value: jsonValue } // Certifique-se de que o key não seja NULL
                         );
 
                         console.log(`Inserido: ${PS_PARTKEY} -> ${jsonValue}`);
